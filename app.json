@@ -8,6 +8,7 @@
     "scheme": "homesawayclean",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    "owner": "vulxan",
     "ios": {
       "supportsTablet": true
     },
@@ -19,7 +20,8 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.anonymous.HomesAwayClean"
     },
     "web": {
       "output": "static",
@@ -30,12 +32,12 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-icon.png",
-          "imageWidth": 200,
-          "resizeMode": "contain",
-          "backgroundColor": "#ffffff",
+          "image": "./assets/images/splash-screen-portrait-with-icon.png",
+          "resizeMode": "cover",
+          "backgroundColor": "#0f172a",
           "dark": {
-            "backgroundColor": "#000000"
+            "backgroundColor": "#000000",
+            "image": "./assets/images/splash-screen-portrait-with-icon.png"
           }
         }
       ]
@@ -43,6 +45,21 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "supabaseUrl": "https://csikkmbqyqdwkevzgtwy.supabase.co",
+      "supabaseAnonKey": "sb_publishable_J7ho1QF-6B1bPMxtfo2eCA_velbeW30",
+      "supabaseBucketName": "listings",
+      "router": {},
+      "eas": {
+        "projectId": "4d40e992-c0a6-4a79-82fd-8c5e8278cffc"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/4d40e992-c0a6-4a79-82fd-8c5e8278cffc"
     }
   }
 }

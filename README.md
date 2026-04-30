@@ -1,50 +1,62 @@
-# Welcome to your Expo app 👋
+# HomesAwayClean
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+HomesAwayClean is an Expo Router app for discovering premium student stays in Kolkata.
 
-## Get started
+## Stack
 
-1. Install dependencies
+- Expo SDK 54
+- React Native 0.81
+- React 19
+- TypeScript strict mode
+- Expo Router tabs
+- AsyncStorage for local persistence
 
-   ```bash
-   npm install
-   ```
-
-2. Start the app
-
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+## Local Setup
 
 ```bash
-npm run reset-project
+npm install
+npm run start
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+Useful scripts:
 
-## Learn more
+```bash
+npm run android
+npm run ios
+npm run web
+npm run lint
+npm run typecheck
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+## Architecture
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+```text
+app/                  Thin Expo Router entry points
+src/data/             Static prototype data and domain types
+src/features/         Product features grouped by business area
+src/hooks/            Shared app hooks
+src/storage/          Local persistence adapters
+src/theme/            Design tokens
+components/           Shared native UI primitives still used by routing
+```
 
-## Join the community
+## Current Product Surface
 
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+- Premium onboarding
+- Kolkata listing feed
+- Search and area filtering
+- Saved listings
+- Recently viewed listings
+- Two-listing comparison
+- Listing detail pages
+- Student login/signup
+- Owner login/signup
+- Booking request capture
+- Locality search for Ballygunge, Park Circus, Salt Lake, New Town, and Gariahat
+- Rent and food preference filters
+- Contact owner actions
+- Persisted favorites
+- Dark/light theme toggle
+- Local admin lead desk
+- Product-specific market intelligence tab
+- Local persistence for user/session state
