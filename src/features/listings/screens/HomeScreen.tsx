@@ -95,17 +95,17 @@ export function HomeScreen() {
   useEffect(() => {
     if (profile?.role === 'owner') {
       router.replace('/owner/listings');
-    } else if (profile?.role === 'admin') {
-      // router.replace('/admin/dashboard'); // if exists
     }
-  }, [profile, router]);
+    // Only redirect on role change - not on every profile update
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [profile?.role]);
 
   useEffect(() => {
-    if (!session || !profile) {
+    if (!session || !profile || profile.role === 'owner') {
       return;
     }
     loadMarketplace();
-  }, [loadMarketplace, profile, session]);
+  }, [loadMarketplace, profile?.id, session]);
 
   const toggleCompare = (listingId: string) => {
     setState((prev) => {

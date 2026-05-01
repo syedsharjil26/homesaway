@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { useAppStateContext } from '@/src/context/AppStateContext';
 import { fetchInquiriesForListings, InquiryStatus, OwnerInquiry, updateInquiryStatus } from '@/src/services/supabaseInquiries';

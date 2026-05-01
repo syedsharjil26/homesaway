@@ -56,11 +56,13 @@ function mapProfileRow(row: SupabaseProfileRow): UserProfile {
 }
 
 function buildProfileInsert(user: User) {
+  const rawPhone = typeof user.user_metadata?.phone === 'string' ? user.user_metadata.phone.trim() : '';
   return {
     id: user.id,
     role: 'student',
     full_name: typeof user.user_metadata?.full_name === 'string' ? user.user_metadata.full_name.trim() : '',
-    phone: typeof user.user_metadata?.phone === 'string' ? user.user_metadata.phone.trim() : '',
+    // Store null instead of empty string to avoid unique constraint collisions on phone
+    phone: rawPhone || null,
     email: user.email ?? '',
     city: 'Kolkata',
     college: null,
@@ -83,11 +85,13 @@ function getReadableProfileError(error: unknown) {
 
 function buildProfileUpdatePayload(user: User, existing: UserProfile | null) {
   const insertPayload = buildProfileInsert(user);
+  const phone = existing?.phone || insertPayload.phone;
 
   return {
     role: existing && isValidRole(existing.role) ? existing.role : insertPayload.role,
     full_name: existing?.fullName || insertPayload.full_name,
-    phone: existing?.phone || insertPayload.phone,
+    // Store null instead of empty string to avoid unique constraint collisions on phone
+    phone: phone || null,
     email: existing?.email || insertPayload.email,
     city: existing?.city || insertPayload.city,
     college: existing?.college ?? insertPayload.college,

@@ -5,6 +5,7 @@ import {
   Alert,
   KeyboardAvoidingView,
   Platform,
+  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
@@ -229,11 +230,11 @@ export function OwnerListingsScreen({ initialEditId, onBack, onOpenInbox, onOpen
   };
 
   return (
-    <View style={styles.root}>
+    <SafeAreaView style={styles.root}>
       <KeyboardAvoidingView
         style={styles.flex}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 24 : 0}>
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}>
         <View style={styles.header}>
           <TouchableOpacity style={styles.headerButton} activeOpacity={0.9} onPress={onBack}>
             <Ionicons name="chevron-back" size={18} color={colors.ink} />
@@ -382,7 +383,7 @@ export function OwnerListingsScreen({ initialEditId, onBack, onOpenInbox, onOpen
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
-    </View>
+    </SafeAreaView>
   );
 }
 

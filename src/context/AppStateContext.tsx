@@ -1,9 +1,11 @@
 import type { PropsWithChildren } from 'react';
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 
 import { useStoredAppState } from '@/src/hooks/useStoredAppState';
 import { useSupabaseAuth } from '@/src/hooks/useSupabaseAuth';
 import { ensureProfileForUser, UserProfile } from '@/src/services/profileService';
+
+const PROFILE_TIMEOUT_MS = 8000;
 
 type AppStateContextType = ReturnType<typeof useStoredAppState> &
   ReturnType<typeof useSupabaseAuth> & {
@@ -22,7 +24,16 @@ export function AppStateProvider({ children }: PropsWithChildren) {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [isProfileLoading, setIsProfileLoading] = useState(false);
   const [profileError, setProfileError] = useState<string | null>(null);
+  const [profileTimedOut, setProfileTimedOut] = useState(false);
   const sessionUser = auth.session?.user ?? null;
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const clearProfileTimeout = useCallback(() => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+  }, []);
 
   const refreshProfile = useCallback(async () => {
     if (!sessionUser) {
@@ -45,14 +56,26 @@ export function AppStateProvider({ children }: PropsWithChildren) {
   }, [sessionUser]);
 
   useEffect(() => {
+    clearProfileTimeout();
+
     if (!sessionUser) {
       setProfile(null);
       setProfileError(null);
       setIsProfileLoading(false);
+      setProfileTimedOut(false);
       return;
     }
 
     let isCancelled = false;
+    setProfileTimedOut(false);
+
+    // Timeout fallback: if backend is unreachable, unblock the app after PROFILE_TIMEOUT_MS
+    timeoutRef.current = setTimeout(() => {
+      if (!isCancelled) {
+        setIsProfileLoading(false);
+        setProfileTimedOut(true);
+      }
+    }, PROFILE_TIMEOUT_MS);
 
     const syncProfile = async () => {
       setIsProfileLoading(true);
@@ -62,11 +85,13 @@ export function AppStateProvider({ children }: PropsWithChildren) {
         if (!isCancelled) {
           setProfile(nextProfile);
           setProfileError(null);
+          clearProfileTimeout();
         }
       } catch (err) {
         if (!isCancelled) {
           const message = err instanceof Error ? err.message : 'Profile sync failed';
           setProfileError(message);
+          clearProfileTimeout();
         }
       } finally {
         if (!isCancelled) {
@@ -79,10 +104,17 @@ export function AppStateProvider({ children }: PropsWithChildren) {
 
     return () => {
       isCancelled = true;
+      clearProfileTimeout();
     };
-  }, [sessionUser]);
+  // Intentionally depend on sessionUser.id only to avoid re-running on every render cycle
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sessionUser?.id]);
 
-  const ready = store.isHydrated && !auth.authLoading && (!sessionUser || (!isProfileLoading && (!!profile || !!profileError)));
+  // App is ready when storage hydrated, auth resolved, and profile resolved (or timed out)
+  const ready =
+    store.isHydrated &&
+    !auth.authLoading &&
+    (!sessionUser || !isProfileLoading || profileTimedOut);
 
   const value = useMemo(
     () => ({

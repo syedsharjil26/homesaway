@@ -64,6 +64,11 @@ type SupabaseErrorLike = {
 
 function getSupabaseListingError(action: string, error: unknown) {
   const supabaseError = error as SupabaseErrorLike;
+
+  if (__DEV__) {
+    console.warn(`[supabaseListings] ${action}:`, JSON.stringify(supabaseError, null, 2));
+  }
+
   const parts = [
     supabaseError.message || `Unable to ${action}.`,
     supabaseError.details ? `Details: ${supabaseError.details}` : '',
@@ -72,15 +77,15 @@ function getSupabaseListingError(action: string, error: unknown) {
   ].filter(Boolean);
 
   if (supabaseError.code === '42501') {
-    return `${parts.join(' ')} RLS check failed. Confirm the signed-in user id matches listings.owner_id and created_by_owner_id.`;
+    return `Permission denied. Your account role may not be "owner" yet — please sign out and back in, then retry. (${parts.join(' ')})`;
   }
 
   if (supabaseError.code === '23503') {
-    return `${parts.join(' ')} Owner profile is missing for the signed-in auth user.`;
+    return `Owner profile not found for your account. Please contact support. (${parts.join(' ')})`;
   }
 
   if (supabaseError.code === '23514') {
-    return `${parts.join(' ')} One of the listing fields does not match the database constraints.`;
+    return `A listing field value is invalid. Check that locality, room type, gender, food preference are all valid options. (${parts.join(' ')})`;
   }
 
   return parts.join(' ');
