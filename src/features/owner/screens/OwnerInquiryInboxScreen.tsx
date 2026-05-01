@@ -70,7 +70,7 @@ export function OwnerInquiryInboxScreen({ onBack }: OwnerInquiryInboxScreenProps
   };
 
   return (
-    <View style={styles.root}>
+    <SafeAreaView style={styles.root}>
       <View style={styles.headerRow}>
         <TouchableOpacity style={styles.backButton} activeOpacity={0.9} onPress={onBack}>
           <Text style={styles.backText}>Back</Text>
@@ -130,7 +130,7 @@ export function OwnerInquiryInboxScreen({ onBack }: OwnerInquiryInboxScreenProps
           ))
         )}
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }
 
